@@ -81,21 +81,16 @@ jobs:
 
       - name: Debug: List extracted files to find Katalon Engine folder
         run: |
-          echo "Listing contents:"
+          echo "Listing contents in workspace:"
           ls -lah
-          echo "Directories starting with Katalon_Studio_Engine:"
+          echo "Directories matching pattern:"
           ls -d Katalon_Studio_Engine_Linux_64-* || ls
 
       - name: Run Katalon Test Suite
         run: |
-          # Dynamically get engine folder
           KSE_DIR=$(ls -d Katalon_Studio_Engine_Linux_64-* | head -n 1)
           echo "Using engine directory: $KSE_DIR"
-
-          # Ensure executable
           chmod +x "$KSE_DIR/katalon"
-
-          # Run tests
           "./$KSE_DIR/katalon" -noSplash \
             -runMode=console \
             -projectPath="${GITHUB_WORKSPACE}/${KATALON_PROJECT_PATH}" \
