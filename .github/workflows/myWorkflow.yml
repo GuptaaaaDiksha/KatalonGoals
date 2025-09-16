@@ -58,7 +58,9 @@ jobs:
 
       - name: Run Katalon Test Suite
         run: |
-          ./Katalon_Studio_Engine_Linux_64-$KATALON_VERSION/katalon -noSplash \
+          KATALON_DIR="$GITHUB_WORKSPACE/Katalon_Studio_Engine_Linux_64-$KATALON_VERSION"
+          chmod +x "$KATALON_DIR/katalon"
+          "$KATALON_DIR/katalon" -noSplash \
             -runMode=console \
             -projectPath=$GITHUB_WORKSPACE/$KATALON_PROJECT_PATH \
             -retry=0 \
