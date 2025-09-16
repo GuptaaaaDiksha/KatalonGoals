@@ -41,22 +41,23 @@ jobs:
           sudo add-apt-repository universe -y
           sudo apt-get update
 
+          # Download .deb packages from Ubuntu 22.04 (Jammy)
           wget http://archive.ubuntu.com/ubuntu/pool/universe/g/gconf/gconf2-common_3.2.6-7ubuntu2_all.deb
           wget http://archive.ubuntu.com/ubuntu/pool/universe/g/gconf/libgconf-2-4_3.2.6-7ubuntu2_amd64.deb
 
+          # Install
           sudo dpkg -i gconf2-common_3.2.6-7ubuntu2_all.deb
           sudo dpkg -i libgconf-2-4_3.2.6-7ubuntu2_amd64.deb
 
+          # Fix dependencies
           sudo apt-get install -f -y
 
       - name: Get Chrome & ChromeDriver download URLs
         id: chrome_urls
         run: |
           JSON_URL="https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json"
-          # Get Chrome URL
           CHROME_URL=$(curl -sL "$JSON_URL" \
             | jq -r '.channels.Stable.downloads.chrome[] | select(.platform == "linux64") | .url')
-          # Get ChromeDriver URL
           CHROMEDRIVER_URL=$(curl -sL "$JSON_URL" \
             | jq -r '.channels.Stable.downloads.chromedriver[] | select(.platform == "linux64") | .url')
           echo "CHROME_DOWNLOAD_URL=$CHROME_URL" >> $GITHUB_ENV
@@ -73,8 +74,10 @@ jobs:
           # Download ChromeDriver
           curl -sL -o chromedriver-linux64.zip "$CHROMEDRIVER_DOWNLOAD_URL"
           unzip chromedriver-linux64.zip
-          chmod +x linux64/chromedriver
-          sudo mv linux64/chromedriver /usr/local/bin/chromedriver
+
+          # Make binary executable and move it
+          chmod +x chromedriver-linux64/chromedriver
+          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
 
       - name: Download Katalon Studio Engine (Linux)
         run: |
