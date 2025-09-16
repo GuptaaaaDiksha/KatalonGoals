@@ -28,46 +28,15 @@ jobs:
       - name: Install general dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y unzip curl jq xvfb libxi6 libnss3
+          sudo apt-get install -y unzip curl jq xvfb libxi6 libnss3 libxss1 libappindicator3-1 libindicator3-1
 
-      - name: Install libdbus-glib-1-2 dependency
+      - name: Set up Chrome
+        uses: browser-actions/setup-chrome@v1
+        with:
+          chrome-version: '120'
+          install-chromedriver: true
+          install-dependencies: true
+
+      - name: Run Katalon tests
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libdbus-glib-1-2
-
-      - name: Install libgconf-2-4 workaround
-        run: |
-          sudo add-apt-repository universe -y
-          sudo apt-get update
-
-          # Download .deb packages
-          wget http://archive.ubuntu.com/ubuntu/pool/universe/g/gconf/gconf2-common_3.2.6-7ubuntu2_all.deb
-          wget http://archive.ubuntu.com/ubuntu/pool/universe/g/gconf/libgconf-2-4_3.2.6-7ubuntu2_amd64.deb
-
-          sudo dpkg -i gconf2-common_3.2.6-7ubuntu2_all.deb
-          sudo dpkg -i libgconf-2-4_3.2.6-7ubuntu2_amd64.deb
-
-          sudo apt-get install -f -y
-
-      - name: Get Chrome & ChromeDriver download URLs
-        id: chrome_urls
-        run: |
-          JSON_URL="https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json"
-          CHROME_URL=$(curl -sL "$JSON_URL" \
-            | jq -r '.channels.Stable.downloads.chrome[] | select(.platform == "linux64") | .url')
-          CHROMEDRIVER_URL=$(curl -sL "$JSON_URL" \
-            | jq -r '.channels.Stable.downloads.chromedriver[] | select(.platform == "linux64") | .url')
-          echo "CHROME_DOWNLOAD_URL=$CHROME_URL" >> $GITHUB_ENV
-          echo "CHROMEDRIVER_DOWNLOAD_URL=$CHROMEDRIVER_URL" >> $GITHUB_ENV
-
-      - name: Download and install Chrome and ChromeDriver
-        run: |
-          curl -sL -o chrome-linux64.zip "$CHROME_DOWNLOAD_URL"
-          unzip chrome-linux64.zip
-          sudo mv chrome-linux64 /opt/google/chrome
-          sudo ln -sf /opt/google/chrome/chrome /usr/bin/google-chrome
-
-          curl -sL -o chromedriver-linux64.zip "$CHROMEDRIVER_DOWNLOAD_URL"
-          unzip chromedriver-linux64.zip
-          chmod +x chromedriver-linux64/chromedriver
-          sudo mv chromedriver-linux64/chrome
+          ./katalon-execute.sh -noSplash -retry=0 -testSuitePath="Test Suites/DemoSuite" -browserType="Chrome (headless)" -executionProfile="default" -apiKey=${{ secrets.KATALON_API_KEY }} --config -webui.autoUpdateDrivers=true
