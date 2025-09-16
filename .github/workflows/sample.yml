@@ -1,36 +1,84 @@
-# This is a basic workflow to help you get started with Actions
+name: Katalon-CI
 
-name: CI
-
-# Controls when the workflow will run
 on:
-  # Triggers the workflow on push or pull request events but only for the "master" branch
   push:
-    branches: [ "master" ]
+    branches:
+      - master
   pull_request:
-    branches: [ "master" ]
-
-  # Allows you to run this workflow manually from the Actions tab
+    branches:
+      - master
   workflow_dispatch:
 
-# A workflow run is made up of one or more jobs that can run sequentially or in parallel
 jobs:
-  # This workflow contains a single job called "build"
-  build:
-    # The type of runner that the job will run on
+  katalon-test:
     runs-on: ubuntu-latest
 
-    # Steps represent a sequence of tasks that will be executed as part of the job
     steps:
-      # Checks-out your repository under $GITHUB_WORKSPACE, so your job can access it
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
-      # Runs a single command using the runners shell
-      - name: Run a one-line script
-        run: echo Hello, world!
+      - name: Set up Java 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: temurin
+          java-version: '17'
 
-      # Runs a set of commands using the runners shell
-      - name: Run a multi-line script
+      - name: Install dependencies
         run: |
-          echo Add other actions to build,
-          echo test, and deploy your project.
+          sudo apt-get update
+          sudo apt-get install -yqq unzip curl jq xvfb
+
+      - name: Get latest stable Chrome-for-Testing version
+        id: get_chrome_version
+        run: |
+          set -e
+          LATEST_VERSION=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json | jq -r '.channels.Stable.version')
+          echo "chrome_version=$LATEST_VERSION" >> $GITHUB_ENV
+
+      - name: Download ChromeDriver and Chrome for Testing
+        run: |
+          set -e
+          echo "Using Chrome version: $chrome_version"
+
+          # Download ChromeDriver
+          curl -s -o chromedriver.zip "https://storage.googleapis.com/chrome-for-testing-public/$chrome_version/linux64/chromedriver-linux64.zip"
+          unzip chromedriver.zip
+          chmod +x chromedriver-linux64/chromedriver
+          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
+
+          # Download Chrome itself
+          curl -s -o chrome.zip "https://storage.googleapis.com/chrome-for-testing-public/$chrome_version/linux64/chrome-linux64.zip"
+          unzip chrome.zip
+          sudo mv chrome-linux64 /opt/google/chrome
+          sudo ln -sf /opt/google/chrome/chrome /usr/bin/google-chrome
+
+      - name: Start virtual display
+        run: |
+          set -e
+          Xvfb :99 -screen 0 1920x1080x24 &
+          sleep 3
+          echo "DISPLAY=:99"
+
+      - name: Download and Extract Katalon Studio Engine
+        env:
+          KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
+        run: |
+          set -e
+          curl -L -O "https://download.katalon.com/9.2.0/Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz"
+          tar -xvzf Katalon_Studio_Engine_Linux_64-9.2.0.tar.gz
+          chmod +x Katalon_Studio_Engine_Linux_64-9.2.0/katalonc
+
+      - name: Run Katalon tests
+        env:
+          KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
+          DISPLAY: :99
+        run: |
+          ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
+            -noSplash \
+            -runMode=console \
+            -projectPath=$(pwd)/DemoTest.prj \
+            -retry=0 \
+            -testSuitePath="Test Suites/DemoSuite" \
+            -executionProfile="default" \
+            -browserType="Chrome (headless)" \
+            -apiKey="${KATALON_API_KEY}"
