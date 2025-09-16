@@ -26,7 +26,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -yqq unzip curl jq xvfb libnss3 libgconf-2-4
+          sudo apt-get install -yqq unzip curl jq xvfb libnss3
 
       - name: Get latest stable Chrome-for-Testing version
         id: get_chrome_version
@@ -86,3 +86,4 @@ jobs:
             -apiKey="${KATALON_API_KEY}" \
             --config webui.driver.chrome.path=/usr/local/bin/chromedriver \
             --config webui.autoUpdateDrivers=false
+
