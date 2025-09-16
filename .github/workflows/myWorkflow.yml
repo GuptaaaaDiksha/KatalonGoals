@@ -17,74 +17,70 @@ jobs:
       BROWSER: "Chrome (headless)"
 
     steps:
-      # 1. Checkout the code
       - name: Checkout code
         uses: actions/checkout@v3
 
-      # 2. Set up Java 17
       - name: Set up Java 17
         uses: actions/setup-java@v3
         with:
           distribution: temurin
           java-version: '17'
 
-      # 3. Install general dependencies
-      - name: Install dependencies
+      - name: Install general dependencies
         run: |
           sudo apt-get update
           sudo apt-get install -y unzip curl jq xvfb libxi6 libnss3
 
-      # 4. Workaround: Install libdbus-glib-1-2 (dependency for libgconf-2-4)
-      - name: Install libdbus-glib-1-2
+      - name: Install libdbus-glib-1-2 dependency
         run: |
           sudo apt-get update
           sudo apt-get install -y libdbus-glib-1-2
 
-      # 5. Workaround: Install libgconf-2-4 from Ubuntu 22.04 (Jammy)
       - name: Install libgconf-2-4 workaround
         run: |
           sudo add-apt-repository universe -y
           sudo apt-get update
 
-          # Download .deb packages from Jammy (if not locally cached)
           wget http://archive.ubuntu.com/ubuntu/pool/universe/g/gconf/gconf2-common_3.2.6-7ubuntu2_all.deb
           wget http://archive.ubuntu.com/ubuntu/pool/universe/g/gconf/libgconf-2-4_3.2.6-7ubuntu2_amd64.deb
 
-          # Install common first
           sudo dpkg -i gconf2-common_3.2.6-7ubuntu2_all.deb
-          # Then the library
           sudo dpkg -i libgconf-2-4_3.2.6-7ubuntu2_amd64.deb
 
-          # Fix any missing dependencies (including libdbus-glib etc.)
           sudo apt-get install -f -y
 
-      # 6. Get latest Chrome version
-      - name: Get latest Chrome version
-        id: chrome_version
+      - name: Get Chrome & ChromeDriver download URLs
+        id: chrome_urls
         run: |
-          LATEST_VERSION=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json | jq -r '.channels.Stable.version')
-          echo "CHROME_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
+          JSON_URL="https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions-with-downloads.json"
+          # Get Chrome URL
+          CHROME_URL=$(curl -sL "$JSON_URL" \
+            | jq -r '.channels.Stable.downloads.chrome[] | select(.platform == "linux64") | .url')
+          # Get ChromeDriver URL
+          CHROMEDRIVER_URL=$(curl -sL "$JSON_URL" \
+            | jq -r '.channels.Stable.downloads.chromedriver[] | select(.platform == "linux64") | .url')
+          echo "CHROME_DOWNLOAD_URL=$CHROME_URL" >> $GITHUB_ENV
+          echo "CHROMEDRIVER_DOWNLOAD_URL=$CHROMEDRIVER_URL" >> $GITHUB_ENV
 
-      # 7. Install Chrome and ChromeDriver
-      - name: Install Chrome and ChromeDriver
+      - name: Download and install Chrome and ChromeDriver
         run: |
-          curl -s -o chrome.zip "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/$CHROME_VERSION/linux64/chrome-linux64.zip"
-          unzip chrome.zip
+          # Download Chrome
+          curl -sL -o chrome-linux64.zip "$CHROME_DOWNLOAD_URL"
+          unzip chrome-linux64.zip
           sudo mv chrome-linux64 /opt/google/chrome
           sudo ln -sf /opt/google/chrome/chrome /usr/bin/google-chrome
 
-          curl -s -o chromedriver.zip "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/$CHROME_VERSION/linux64/chromedriver-linux64.zip"
-          unzip chromedriver.zip
-          chmod +x chromedriver-linux64/chromedriver
-          sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
+          # Download ChromeDriver
+          curl -sL -o chromedriver-linux64.zip "$CHROMEDRIVER_DOWNLOAD_URL"
+          unzip chromedriver-linux64.zip
+          chmod +x linux64/chromedriver
+          sudo mv linux64/chromedriver /usr/local/bin/chromedriver
 
-      # 8. Download Katalon Studio Engine (Linux)
-      - name: Download Katalon Studio Engine
+      - name: Download Katalon Studio Engine (Linux)
         run: |
           wget -q https://github.com/katalon-studio/katalon-studio/releases/download/v$KATALON_VERSION/Katalon_Studio_Engine_Linux_64-$KATALON_VERSION.tar.gz
           tar -xzf Katalon_Studio_Engine_Linux_64-$KATALON_VERSION.tar.gz
 
-      # 9. Run the Katalon Test Suite
       - name: Run Katalon Test Suite
         run: |
           ./Katalon_Studio_Engine_Linux_64-$KATALON_VERSION/katalon -noSplash \
@@ -97,7 +93,6 @@ jobs:
             --config webui.driver.chrome.path=/usr/local/bin/chromedriver \
             --config webui.autoUpdateDrivers=true
 
-      # 10. Archive Reports using upload-artifact@v4
       - name: Archive Reports
         uses: actions/upload-artifact@v4
         with:
