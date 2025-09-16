@@ -1,4 +1,4 @@
-name: Katalon Test Execution
+name: Katalon Test Executions
 
 on:
   push:
