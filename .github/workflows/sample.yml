@@ -73,6 +73,7 @@ jobs:
         env:
           KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
           DISPLAY: :99
+          KATALON_DISABLE_AUTO_UPDATE_DRIVER: true
         run: |
           export DISPLAY=:99
           ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
@@ -84,6 +85,4 @@ jobs:
             -executionProfile="default" \
             -browserType="Chrome (headless)" \
             -apiKey="${KATALON_API_KEY}" \
-            --config webui.driver.chrome.path=/usr/local/bin/chromedriver \
-            --config webui.autoUpdateDrivers=false
-
+            --config webui.driver.chrome.path=/usr/local/bin/chromedriver
