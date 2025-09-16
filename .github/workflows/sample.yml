@@ -26,13 +26,14 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -yqq unzip curl jq xvfb
+          sudo apt-get install -yqq unzip curl jq xvfb libnss3 libgconf-2-4
 
       - name: Get latest stable Chrome-for-Testing version
         id: get_chrome_version
         run: |
           set -e
           LATEST_VERSION=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json | jq -r '.channels.Stable.version')
+          echo "Using Chrome version: $LATEST_VERSION"
           echo "chrome_version=$LATEST_VERSION" >> $GITHUB_ENV
 
       - name: Download ChromeDriver and Chrome for Testing
@@ -56,8 +57,8 @@ jobs:
         run: |
           set -e
           Xvfb :99 -screen 0 1920x1080x24 &
-          sleep 3
-          echo "DISPLAY=:99"
+          export DISPLAY=:99
+          sleep 5
 
       - name: Download and Extract Katalon Studio Engine
         env:
@@ -73,6 +74,7 @@ jobs:
           KATALON_API_KEY: ${{ secrets.KATALON_API_KEY }}
           DISPLAY: :99
         run: |
+          export DISPLAY=:99
           ./Katalon_Studio_Engine_Linux_64-9.2.0/katalonc \
             -noSplash \
             -runMode=console \
@@ -81,4 +83,6 @@ jobs:
             -testSuitePath="Test Suites/DemoSuite" \
             -executionProfile="default" \
             -browserType="Chrome (headless)" \
-            -apiKey="${KATALON_API_KEY}"
+            -apiKey="${KATALON_API_KEY}" \
+            --config webui.driver.chrome.path=/usr/local/bin/chromedriver \
+            --config webui.autoUpdateDrivers=false
