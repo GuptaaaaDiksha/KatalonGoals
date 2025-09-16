@@ -28,41 +28,57 @@ jobs:
           distribution: temurin
           java-version: '17'
 
-      # 3. Install dependencies
+      # 3. Install general dependencies
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y unzip curl jq xvfb libxi6 libgconf-2-4 libnss3
+          sudo apt-get install -y unzip curl jq xvfb libxi6 libnss3
 
-      # 4. Get latest stable Chrome-for-Testing version
+      # 4. Workaround: Install libgconf-2-4 from Ubuntu 22.04 (Jammy)
+      - name: Install libgconf-2-4 workaround
+        run: |
+          # enable universe repository (just in case)
+          sudo add-apt-repository universe -y
+          sudo apt-get update
+
+          # Download the .deb packages from Ubuntu Jammy
+          wget http://archive.ubuntu.com/ubuntu/pool/universe/g/gconf/gconf2-common_3.2.6-7ubuntu2_all.deb
+          wget http://archive.ubuntu.com/ubuntu/pool/universe/g/gconf/libgconf-2-4_3.2.6-7ubuntu2_amd64.deb
+
+          # Install gconf2 common first, then libgconf
+          sudo dpkg -i gconf2-common_3.2.6-7ubuntu2_all.deb
+          sudo dpkg -i libgconf-2-4_3.2.6-7ubuntu2_amd64.deb
+
+          # Fix broken dependencies if any
+          sudo apt-get install -f -y
+
+      # 5. Get Chrome version
       - name: Get latest Chrome version
         id: chrome_version
         run: |
           LATEST_VERSION=$(curl -s https://googlechromelabs.github.io/chrome-for-testing/last-known-good-versions.json | jq -r '.channels.Stable.version')
           echo "CHROME_VERSION=$LATEST_VERSION" >> $GITHUB_ENV
 
-      # 5. Download Chrome-for-Testing and ChromeDriver
+      # 6. Install Chrome and ChromeDriver
       - name: Install Chrome and ChromeDriver
         run: |
-          # Download Chrome
           curl -s -o chrome.zip "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/$CHROME_VERSION/linux64/chrome-linux64.zip"
           unzip chrome.zip
           sudo mv chrome-linux64 /opt/google/chrome
           sudo ln -sf /opt/google/chrome/chrome /usr/bin/google-chrome
 
-          # Download ChromeDriver
           curl -s -o chromedriver.zip "https://edgedl.me.gvt1.com/edgedl/chrome/chrome-for-testing/$CHROME_VERSION/linux64/chromedriver-linux64.zip"
           unzip chromedriver.zip
           chmod +x chromedriver-linux64/chromedriver
           sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
 
-      # 6. Download Katalon Studio Engine (Linux)
+      # 7. Download Katalon Studio Engine (Linux)
       - name: Download Katalon Studio Engine
         run: |
           wget -q https://github.com/katalon-studio/katalon-studio/releases/download/v$KATALON_VERSION/Katalon_Studio_Engine_Linux_64-$KATALON_VERSION.tar.gz
           tar -xzf Katalon_Studio_Engine_Linux_64-$KATALON_VERSION.tar.gz
 
-      # 7. Run Katalon Test Suite
+      # 8. Run Katalon Test Suite
       - name: Run Katalon Test Suite
         run: |
           ./Katalon_Studio_Engine_Linux_64-$KATALON_VERSION/katalon -noSplash \
@@ -75,7 +91,7 @@ jobs:
             --config webui.driver.chrome.path=/usr/local/bin/chromedriver \
             --config webui.autoUpdateDrivers=true
 
-      # 8. Archive Reports using upload-artifact@v4
+      # 9. Archive Reports using upload-artifact@v4
       - name: Archive Reports
         uses: actions/upload-artifact@v4
         with:
@@ -84,5 +100,4 @@ jobs:
             ${{ github.workspace }}/Reports/**
           retention-days: 14
           include-hidden-files: true
-          # If no files found, treat as failure so you catch missing outputs
           if-no-files-found: error
