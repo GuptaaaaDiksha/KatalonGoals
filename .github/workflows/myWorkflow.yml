@@ -36,7 +36,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y unzip curl jq xvfb libxi6 libnss3
+          sudo apt-get install -y unzip curl jq xvfb libxi6 libnss3 libxml2-utils
 
       - name: Get latest Chrome version
         id: chrome_version
@@ -52,7 +52,6 @@ jobs:
           unzip -q chrome.zip
           sudo mv chrome-linux64 /opt/google/chrome
           sudo ln -sf /opt/google/chrome/chrome /usr/bin/google-chrome
-
           echo "Downloading ChromeDriver $CHROME_VERSION"
           curl -sL -o chromedriver.zip "https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION/linux64/chromedriver-linux64.zip"
           unzip -q chromedriver.zip
@@ -68,7 +67,6 @@ jobs:
           ls -la $GITHUB_WORKSPACE
           echo "Listing extracted Katalon engine directory:"
           ls -la $GITHUB_WORKSPACE/Katalon_Studio_Engine_Linux_64-$KATALON_VERSION
-
           echo "Replacing bundled ChromeDriver with system version"
           cp /usr/local/bin/chromedriver \
             $GITHUB_WORKSPACE/Katalon_Studio_Engine_Linux_64-$KATALON_VERSION/configuration/resources/drivers/chromedriver_linux64/chromedriver
@@ -78,7 +76,6 @@ jobs:
           KATALON_DIR="$GITHUB_WORKSPACE/Katalon_Studio_Engine_Linux_64-$KATALON_VERSION"
           echo "Using KATALON_DIR = $KATALON_DIR"
           chmod +x "$KATALON_DIR/katalonc"
-
           "$KATALON_DIR/katalonc" -noSplash \
             -runMode=console \
             -projectPath="$GITHUB_WORKSPACE/$KATALON_PROJECT_PATH" \
@@ -89,17 +86,38 @@ jobs:
             -apiKey="${{ secrets.KATALON_API_KEY }}" \
             --config -webui.autoUpdateDrivers=true
 
+      - name: Show Test Pass/Fail Summary
+        run: |
+          REPORT_DIR="$GITHUB_WORKSPACE/Reports"
+          XML_FILE=$(find "$REPORT_DIR" -name '*.xml' | head -n 1)
+
+          if [ -f "$XML_FILE" ]; then
+            echo "JUnit XML report found at: $XML_FILE"
+
+            TOTAL=$(xmllint --xpath "string(count(/testsuite/testcase))" "$XML_FILE")
+            PASSED=$(xmllint --xpath "string(count(/testsuite/testcase[not(failure) and not(error)]))" "$XML_FILE")
+            FAILED=$(xmllint --xpath "string(count(/testsuite/testcase[failure or error]))" "$XML_FILE")
+            SKIPPED=$(xmllint --xpath "string(count(/testsuite/testcase/skipped))" "$XML_FILE")
+
+            echo "===== Test Summary ====="
+            echo "Total: $TOTAL"
+            echo "Passed: $PASSED"
+            echo "Failed: $FAILED"
+            echo "Skipped: $SKIPPED"
+            echo "========================"
+
+            if [ "$FAILED" -gt 0 ]; then
+              echo "Some tests failed."
+              exit 1
+            fi
+          else
+            echo "No JUnit XML report found."
+          fi
+        shell: bash
+
       - name: Archive Reports
         uses: actions/upload-artifact@v4
         with:
           name: katalon-reports
           path: |
             $GITHUB_WORKSPACE/Reports/**
-
-      - name: Generate JUnit Test Report Summary
-        uses: mikepenz/action-junit-report@v4
-        with:
-          report_paths: ${{ github.workspace }}/Reports/**/*.xml
-          detailed_summary: true
-          include_passed: true
-          job_summary: true        # Show pass/fail summary in Actions
