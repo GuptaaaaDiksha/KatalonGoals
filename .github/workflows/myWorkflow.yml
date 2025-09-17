@@ -96,33 +96,10 @@ jobs:
           path: |
             $GITHUB_WORKSPACE/Reports/**
 
-      - name: Show Pass/Fail Summary
-        run: |
-          REPORT_DIR=$(find $GITHUB_WORKSPACE/Reports -type d -name "*DemoSuite*" | sort | tail -1)
-          CSV_FILE=$(find "$REPORT_DIR" -type f -name "*.csv" | head -1)
-
-          if [ -f "$CSV_FILE" ]; then
-            echo "### ✅ Test Results" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            awk -F',' 'NR>1 {total++; if($3=="PASS") pass++; else fail++} END {print "Total:",total,"\nPassed:",pass,"\nFailed:",fail}' "$CSV_FILE" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "No CSV report found" >> $GITHUB_STEP_SUMMARY
-          fi
-
-      - name: Publish HTML Report to Summary
-        run: |
-          REPORT_DIR=$(find $GITHUB_WORKSPACE/Reports -type d -name "*DemoSuite*" | sort | tail -1)
-          HTML_FILE=$(find "$REPORT_DIR" -type f -name "*.html" | head -1)
-
-          if [ -f "$HTML_FILE" ]; then
-            echo "### 📊 Katalon HTML Report" >> $GITHUB_STEP_SUMMARY
-            echo "You can also download full reports from the artifacts below." >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "<details><summary>Open Report</summary>" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            cat "$HTML_FILE" >> $GITHUB_STEP_SUMMARY
-            echo "" >> $GITHUB_STEP_SUMMARY
-            echo "</details>" >> $GITHUB_STEP_SUMMARY
-          else
-            echo "No HTML report found" >> $GITHUB_STEP_SUMMARY
-          fi
+      - name: Publish Test Results Summary
+        if: always()
+        uses: mikepenz/action-junit-report@v4
+        with:
+          report_paths: "**/Reports/**/*.xml"
+          detailed_summary: true
+          include_passed: true
