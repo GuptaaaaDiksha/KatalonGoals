@@ -89,11 +89,12 @@ jobs:
             -apiKey="${{ secrets.KATALON_API_KEY }}" \
             --config -webui.autoUpdateDrivers=true
 
-      - name: Archive Katalon Reports
+      - name: Archive Reports
         uses: actions/upload-artifact@v4
         with:
           name: katalon-reports
-          path: ${{ github.workspace }}/Reports/**
+          path: |
+            $GITHUB_WORKSPACE/Reports/**
 
       - name: Generate JUnit Test Report Summary
         uses: mikepenz/action-junit-report@v4
@@ -101,6 +102,5 @@ jobs:
           report_paths: ${{ github.workspace }}/Reports/**/*.xml
           detailed_summary: true
           include_passed: true
-          job_summary: true
-          check_name: "JUnit Test Report"
-          fail_on_failure: false
+          job_summary: true        # Show pass/fail summary in Actions
+          check_annotations: false # Disable check run to avoid permission error
