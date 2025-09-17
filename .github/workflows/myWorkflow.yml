@@ -47,19 +47,15 @@ jobs:
 
       - name: Install Chrome and ChromeDriver
         run: |
-          echo "Downloading Chrome"
+          echo "Downloading Chrome $CHROME_VERSION"
           curl -sL -o chrome.zip "https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION/linux64/chrome-linux64.zip"
-          ls -lh chrome.zip
-          unzip chrome.zip
-          ls -la
-
+          unzip -q chrome.zip
           sudo mv chrome-linux64 /opt/google/chrome
           sudo ln -sf /opt/google/chrome/chrome /usr/bin/google-chrome
 
-          echo "Downloading ChromeDriver"
+          echo "Downloading ChromeDriver $CHROME_VERSION"
           curl -sL -o chromedriver.zip "https://storage.googleapis.com/chrome-for-testing-public/$CHROME_VERSION/linux64/chromedriver-linux64.zip"
-          ls -lh chromedriver.zip
-          unzip chromedriver.zip
+          unzip -q chromedriver.zip
           chmod +x chromedriver-linux64/chromedriver
           sudo mv chromedriver-linux64/chromedriver /usr/local/bin/chromedriver
 
@@ -67,19 +63,21 @@ jobs:
         run: |
           echo "Downloading Katalon Studio Engine version $KATALON_VERSION"
           wget -q https://github.com/katalon-studio/katalon-studio/releases/download/v$KATALON_VERSION/Katalon_Studio_Engine_Linux_64-$KATALON_VERSION.tar.gz
-          ls -lh Katalon_Studio_Engine_Linux_64-$KATALON_VERSION.tar.gz
           tar -xzf Katalon_Studio_Engine_Linux_64-$KATALON_VERSION.tar.gz
           echo "After extraction, list workspace contents:"
           ls -la $GITHUB_WORKSPACE
           echo "Listing extracted Katalon engine directory:"
           ls -la $GITHUB_WORKSPACE/Katalon_Studio_Engine_Linux_64-$KATALON_VERSION
 
+          echo "Replacing bundled ChromeDriver with system version"
+          cp /usr/local/bin/chromedriver \
+            $GITHUB_WORKSPACE/Katalon_Studio_Engine_Linux_64-$KATALON_VERSION/configuration/resources/drivers/chromedriver_linux64/chromedriver
+
       - name: Run Katalon Test Suite
         run: |
           KATALON_DIR="$GITHUB_WORKSPACE/Katalon_Studio_Engine_Linux_64-$KATALON_VERSION"
           echo "Using KATALON_DIR = $KATALON_DIR"
-          ls -la "$KATALON_DIR" || { echo "Katalon engine directory missing!"; exit 1; }
-          chmod +x "$KATALON_DIR/katalonc" || { echo "katalonc executable not found"; exit 1; }
+          chmod +x "$KATALON_DIR/katalonc"
 
           "$KATALON_DIR/katalonc" -noSplash \
             -runMode=console \
@@ -89,8 +87,7 @@ jobs:
             -executionProfile=default \
             -browserType="$BROWSER" \
             -apiKey="${{ secrets.KATALON_API_KEY }}" \
-            --config webui.driver.chrome.path=/usr/local/bin/chromedriver \
-            --config webui.autoUpdateDrivers=true
+            --config -webui.autoUpdateDrivers=true
 
       - name: Archive Reports
         uses: actions/upload-artifact@v4
