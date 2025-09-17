@@ -103,4 +103,3 @@ jobs:
           detailed_summary: true
           include_passed: true
           job_summary: true        # Show pass/fail summary in Actions
-          check_annotations: false # Disable check run to avoid permission error
