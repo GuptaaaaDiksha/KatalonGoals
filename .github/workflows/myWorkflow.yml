@@ -78,8 +78,9 @@ jobs:
         run: |
           KATALON_DIR="$GITHUB_WORKSPACE/Katalon_Studio_Engine_Linux_64-$KATALON_VERSION"
           echo "Using KATALON_DIR = $KATALON_DIR"
-          ls -la "$KATALON_DIR" || { echo "Katalon dir missing!"; exit 1; }
+          ls -la "$KATALON_DIR" || { echo "Katalon engine directory missing!"; exit 1; }
           chmod +x "$KATALON_DIR/katalonc" || { echo "katalonc executable not found"; exit 1; }
+
           "$KATALON_DIR/katalonc" -noSplash \
             -runMode=console \
             -projectPath="$GITHUB_WORKSPACE/$KATALON_PROJECT_PATH" \
@@ -87,6 +88,7 @@ jobs:
             -testSuitePath="$KATALON_TEST_SUITE" \
             -executionProfile=default \
             -browserType="$BROWSER" \
+            -apiKey="${{ secrets.KATALON_API_KEY }}" \
             --config webui.driver.chrome.path=/usr/local/bin/chromedriver \
             --config webui.autoUpdateDrivers=true
 
