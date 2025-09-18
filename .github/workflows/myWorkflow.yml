@@ -94,10 +94,9 @@ jobs:
         uses: simple-elf/allure-report-action@v1.7
         if: always() # This ensures the report is generated even if tests fail
         with:
-          # This action looks for the raw JSON result files in this directory.
-          # Your Katalon project must be configured to output results here.
-          results_path: allure-results 
-          report_path: allure-report # This is the directory where the HTML report will be generated.
+          # Use the correct input names as per the action's documentation.
+          allure_results: allure-results 
+          allure_report: allure-report # This is the directory where the HTML report will be generated.
 
       - name: Upload Allure Report Artifact
         uses: actions/upload-artifact@v4
