@@ -75,13 +75,32 @@ jobs:
             -apiKey="${{ secrets.KATALON_API_KEY }}" \
             --config -webui.autoUpdateDrivers=true
 
+      # ⬇️ ===== ADDED STEPS FOR ALLURE REPORT ===== ⬇️
+      - name: Generate Allure Report
+        uses: simple-elf/allure-report-action@v1.7
+        if: always() # This ensures the report is generated even if tests fail
+        with:
+          results_path: allure-results # The default folder for Allure results
+          report_path: allure-report # The default output folder for the report
+
+      - name: Upload Allure Report Artifact
+        uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: allure-report
+          path: allure-report
+          retention-days: 7 # Optional: How long to keep the report
+      # ⬆️ =========================================== ⬆️
+
       - name: Archive Katalon Reports
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: katalon-reports
           path: $GITHUB_WORKSPACE/Reports/**
 
       - name: Show Test Pass/Fail Counts
+        if: always()
         run: |
           REPORT_DIR="$GITHUB_WORKSPACE/Reports"
           XML_FILE=$(find "$REPORT_DIR" -name '*.xml' | head -n 1)
