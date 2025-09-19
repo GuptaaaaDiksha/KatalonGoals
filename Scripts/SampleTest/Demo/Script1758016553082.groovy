@@ -17,16 +17,31 @@ import com.kms.katalon.core.windows.keyword.WindowsBuiltinKeywords as Windows
 import internal.GlobalVariable as GlobalVariable
 import org.openqa.selenium.Keys as Keys
 
-WebUI.openBrowser('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
+// Load CSV file from Data Files (make sure it's added as loginData.xlsx)
+def data = findTestData('Data Files/loginData')
 
-WebUI.navigateToUrl('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-//enter user name
-WebUI.setText(findTestObject('Object Repository/Page_OrangeHRM/input_Username_username'), 'Admin')
-//enter password
-WebUI.setEncryptedText(findTestObject('Object Repository/Page_OrangeHRM/input_Password_password'), 'hUKwJTbofgPU9eVlw/CnDQ==')
-//login
-WebUI.click(findTestObject('Object Repository/Page_OrangeHRM/button_Password_oxd-button oxd-button--medi_8860b7'))
-//verify dashboard text
-WebUI.verifyElementPresent(findTestObject('Object Repository/Page_OrangeHRM/span_PIM_oxd-text oxd-text--span oxd-main-m_a32acf'), 10)
-// Close the browser
-WebUI.closeBrowser()
+// Get total number of rows
+int rows = data.getRowNumbers()
+
+for (int r = 1; r <= rows; r++) {
+	String username = data.getValue(1, r)   // first column
+	String password = data.getValue(2, r)   // second column
+
+	WebUI.openBrowser('')
+	WebUI.navigateToUrl('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
+
+	// enter username from CSV
+	WebUI.setText(findTestObject('Object Repository/Page_OrangeHRM/input_Username_username'), username)
+
+	// enter password from CSV (must be encrypted string)
+	WebUI.setEncryptedText(findTestObject('Object Repository/Page_OrangeHRM/input_Password_password'), password)
+
+	// click login
+	WebUI.click(findTestObject('Object Repository/Page_OrangeHRM/button_Password_oxd-button oxd-button--medi_8860b7'))
+
+	// verify dashboard text is present (fixed, not data-driven)
+	WebUI.verifyElementPresent(findTestObject('Object Repository/Page_OrangeHRM/span_PIM_oxd-text oxd-text--span oxd-main-m_a32acf'), 10)
+
+	// close browser
+	WebUI.closeBrowser()
+}
