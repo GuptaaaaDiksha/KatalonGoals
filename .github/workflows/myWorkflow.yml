@@ -90,7 +90,7 @@ jobs:
           echo "Contents of allure-results:"
           ls -la allure-results || echo "allure-results directory does not exist or is empty."
 
-      # ⬇️ ===== ALLURE REPORT GENERATION ===== ⬇️
+      #  ===== ALLURE REPORT GENERATION ===== 
       - name: Generate Allure Report
         uses: simple-elf/allure-report-action@v1.7
         if: always()
@@ -107,7 +107,7 @@ jobs:
           path: allure-report
           retention-days: 7
 
-      # ⬆️ ======================================== ⬆️
+      #  ======================================== 
 
       - name: Archive Katalon Reports
         if: always()
