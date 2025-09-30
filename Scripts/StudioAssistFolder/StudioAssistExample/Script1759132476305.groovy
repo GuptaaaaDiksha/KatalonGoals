@@ -44,6 +44,5 @@ for (int r = 1; r <= rows; r++) {
 	WebUI.verifyElementPresent(findTestObject('Object Repository/Page_OrangeHRM/span_PIM_oxd-text oxd-text--span oxd-main-m_a32acf'), 10)
 
 	// close browser
-	WebUI.closeBrowser()
-	
+
 }
