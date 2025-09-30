@@ -18,7 +18,7 @@
    <smartLocatorCollection>
       <entry>
          <key>SMART_LOCATOR</key>
-         <value>internal:role=banner >> internal:text=&quot;Neal QA&quot;i</value>
+         <value>internal:text=&quot;Ahmed Elian&quot;i</value>
       </entry>
    </smartLocatorCollection>
    <smartLocatorEnabled>false</smartLocatorEnabled>
@@ -29,7 +29,7 @@
       <name>tag</name>
       <type>Main</type>
       <value>p</value>
-      <webElementGuid>2e056905-a7ee-4462-8542-5970492f7162</webElementGuid>
+      <webElementGuid>0e03a651-1a59-44ec-b8c1-b1c61db55729</webElementGuid>
    </webElementProperties>
    <webElementProperties>
       <isSelected>false</isSelected>
@@ -37,15 +37,15 @@
       <name>class</name>
       <type>Main</type>
       <value>oxd-userdropdown-name</value>
-      <webElementGuid>19f6a71f-5558-4a56-9f46-63b6f3b651be</webElementGuid>
+      <webElementGuid>38ed0229-2b33-4a61-9346-5f0a106fddd7</webElementGuid>
    </webElementProperties>
    <webElementProperties>
       <isSelected>true</isSelected>
       <matchCondition>equals</matchCondition>
       <name>text</name>
       <type>Main</type>
-      <value>Neal QA</value>
-      <webElementGuid>d4226c89-0a81-4056-b562-094dae41d285</webElementGuid>
+      <value>Ahmed Elian</value>
+      <webElementGuid>06e12cf9-2985-4a8a-8225-d8346e772558</webElementGuid>
    </webElementProperties>
    <webElementProperties>
       <isSelected>false</isSelected>
@@ -53,7 +53,7 @@
       <name>xpath</name>
       <type>Main</type>
       <value>id(&quot;app&quot;)/div[@class=&quot;oxd-layout orangehrm-upgrade-layout&quot;]/div[@class=&quot;oxd-layout-navigation&quot;]/header[@class=&quot;oxd-topbar&quot;]/div[@class=&quot;oxd-topbar-header&quot;]/div[@class=&quot;oxd-topbar-header-userarea&quot;]/ul[1]/li[@class=&quot;oxd-userdropdown&quot;]/span[@class=&quot;oxd-userdropdown-tab&quot;]/p[@class=&quot;oxd-userdropdown-name&quot;]</value>
-      <webElementGuid>ab432a75-fdb1-4196-8de9-069b5c5380d7</webElementGuid>
+      <webElementGuid>fa6b207d-42bf-4631-8b13-a0ffd221efcb</webElementGuid>
    </webElementProperties>
    <webElementXpaths>
       <isSelected>true</isSelected>
@@ -61,7 +61,63 @@
       <name>xpath:idRelative</name>
       <type>Main</type>
       <value>//div[@id='app']/div/div/header/div/div[3]/ul/li/span/p</value>
-      <webElementGuid>d9045d8a-e751-44bd-84b9-ae571cfaf83c</webElementGuid>
+      <webElementGuid>6c3eb90b-deec-4c5e-acb6-036cc320ee4c</webElementGuid>
+   </webElementXpaths>
+   <webElementXpaths>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>xpath:neighbor</name>
+      <type>Main</type>
+      <value>(.//*[normalize-space(text()) and normalize-space(.)='Configure'])[1]/preceding::p[1]</value>
+      <webElementGuid>a820cafb-f00e-470c-8b49-6176cf2074ec</webElementGuid>
+   </webElementXpaths>
+   <webElementXpaths>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>xpath:neighbor</name>
+      <type>Main</type>
+      <value>(.//*[normalize-space(text()) and normalize-space(.)='Manage Reviews'])[1]/preceding::p[1]</value>
+      <webElementGuid>7c6dafef-3bab-4d2f-acb5-c9cb66db0d7c</webElementGuid>
+   </webElementXpaths>
+   <webElementXpaths>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>xpath:neighbor</name>
+      <type>Main</type>
+      <value>//*/text()[normalize-space(.)='Ahmed Elian']/parent::*</value>
+      <webElementGuid>c08445ed-b0d6-4137-b830-736d2c9692dd</webElementGuid>
+   </webElementXpaths>
+   <webElementXpaths>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>xpath:position</name>
+      <type>Main</type>
+      <value>//p</value>
+      <webElementGuid>a262e649-2554-4ea4-a131-2ad43109fdd4</webElementGuid>
+   </webElementXpaths>
+   <webElementXpaths>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>xpath:customAttributes</name>
+      <type>Main</type>
+      <value>//p[(text() = 'Ahmed Elian' or . = 'Ahmed Elian')]</value>
+      <webElementGuid>2563dd60-bbd7-4436-b770-898215618dd5</webElementGuid>
+   </webElementXpaths>
+   <webElementXpaths>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>xpath:neighbor</name>
+      <type>Main</type>
+      <value>(.//*[normalize-space(text()) and normalize-space(.)='Timesheets'])[1]/preceding::p[1]</value>
+      <webElementGuid>945c1720-65af-4228-8870-848fdc9fff9c</webElementGuid>
+   </webElementXpaths>
+   <webElementXpaths>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>xpath:neighbor</name>
+      <type>Main</type>
+      <value>(.//*[normalize-space(text()) and normalize-space(.)='Attendance'])[1]/preceding::p[1]</value>
+      <webElementGuid>fa94259f-4b67-4627-b4ce-c98b35401b0d</webElementGuid>
    </webElementXpaths>
    <webElementXpaths>
       <isSelected>false</isSelected>
@@ -86,14 +142,6 @@
       <type>Main</type>
       <value>//*/text()[normalize-space(.)='Neal QA']/parent::*</value>
       <webElementGuid>ca6cb673-b562-47a9-a643-0c27fb7179ac</webElementGuid>
-   </webElementXpaths>
-   <webElementXpaths>
-      <isSelected>false</isSelected>
-      <matchCondition>equals</matchCondition>
-      <name>xpath:position</name>
-      <type>Main</type>
-      <value>//p</value>
-      <webElementGuid>e3125bb9-e3f0-430a-b725-d068a0b0a4d8</webElementGuid>
    </webElementXpaths>
    <webElementXpaths>
       <isSelected>false</isSelected>

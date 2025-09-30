@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<WebElementEntity>
+   <description></description>
+   <name>path_Most Commented Posts_heart</name>
+   <tag></tag>
+   <elementGuidId>36dfc0d2-59f6-4e55-a944-c74f1401c549</elementGuidId>
+   <imagePath></imagePath>
+   <selectorCollection>
+      <entry>
+         <key>XPATH</key>
+         <value>//path[@id = 'heart']</value>
+      </entry>
+      <entry>
+         <key>CSS</key>
+         <value>#heart</value>
+      </entry>
+      <entry>
+         <key>IMAGE</key>
+         <value></value>
+      </entry>
+      <entry>
+         <key>BASIC</key>
+         <value>//*[@id = 'heart']</value>
+      </entry>
+   </selectorCollection>
+   <selectorMethod>XPATH</selectorMethod>
+   <smartLocatorCollection>
+      <entry>
+         <key>SMART_LOCATOR</key>
+         <value>#heart >> nth=0</value>
+      </entry>
+   </smartLocatorCollection>
+   <smartLocatorEnabled>false</smartLocatorEnabled>
+   <useRalativeImagePath>true</useRalativeImagePath>
+   <webElementProperties>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>tag</name>
+      <type>Main</type>
+      <value>path</value>
+      <webElementGuid>2061a91c-727e-48d7-b2a8-8ecd71e2ed51</webElementGuid>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>true</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>id</name>
+      <type>Main</type>
+      <value>heart</value>
+      <webElementGuid>18e40681-766f-4791-9c6f-16238cdaa455</webElementGuid>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>class</name>
+      <type>Main</type>
+      <value>orangehrm-heart-icon-path</value>
+      <webElementGuid>a25fdba5-e1ff-4e6d-8163-0de9bbe4a873</webElementGuid>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>d</name>
+      <type>Main</type>
+      <value>M29.144 20.773c-.063-.13-4.227-8.67-11.44-2.59C7.63 28.795 28.94 43.256 29.143 43.394c.204-.138 21.513-14.6 11.44-25.213-7.214-6.08-11.377 2.46-11.44 2.59z</value>
+      <webElementGuid>b033eaf7-2d27-46c5-8d8d-7a7f98a25e56</webElementGuid>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>fill</name>
+      <type>Main</type>
+      <value>#64728c</value>
+      <webElementGuid>a555d252-c8eb-4cbb-9514-351846c785c4</webElementGuid>
+   </webElementProperties>
+   <webElementProperties>
+      <isSelected>false</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>xpath</name>
+      <type>Main</type>
+      <value>id(&quot;app&quot;)/div[@class=&quot;oxd-layout orangehrm-upgrade-layout&quot;]/div[@class=&quot;oxd-layout-container&quot;]/div[@class=&quot;oxd-layout-context&quot;]/div[@class=&quot;oxd-grid-2 orangehrm-buzz-layout&quot;]/div[@class=&quot;oxd-grid-item oxd-grid-item--gutters&quot;]/div[@class=&quot;orangehrm-buzz-newsfeed&quot;]/div[@class=&quot;oxd-grid-1 orangehrm-buzz-newsfeed-posts&quot;]/div[@class=&quot;oxd-grid-item oxd-grid-item--gutters&quot;]/div[@class=&quot;oxd-sheet oxd-sheet--rounded oxd-sheet--white orangehrm-buzz&quot;]/div[@class=&quot;orangehrm-buzz-post-footer&quot;]/div[@class=&quot;orangehrm-buzz-post-actions&quot;]/div[1]/svg[@id=&quot;heart-svg&quot;]/g[@id=&quot;Group&quot;]/path[@id=&quot;heart&quot;]</value>
+      <webElementGuid>17b880a5-6e9c-4716-a4b1-47c07ee8cb28</webElementGuid>
+   </webElementProperties>
+   <webElementXpaths>
+      <isSelected>true</isSelected>
+      <matchCondition>equals</matchCondition>
+      <name>xpath:customAttributes</name>
+      <type>Main</type>
+      <value>//path[@id = 'heart']</value>
+      <webElementGuid>9f0fcfb4-4dd6-4d15-801c-edbc3c0858c8</webElementGuid>
+   </webElementXpaths>
+</WebElementEntity>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<TestCaseEntity>
+   <description></description>
+   <name>test_get_missingUsernameParameter_returns400</name>
+   <tag>API_Test_Generation</tag>
+   <comment></comment>
+   <recordOption>OTHER</recordOption>
+   <testCaseGuid>c9349b41-00f4-41e7-a59e-e77ac73d52fa</testCaseGuid>
+</TestCaseEntity>

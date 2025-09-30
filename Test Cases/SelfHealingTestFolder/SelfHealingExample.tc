@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <TestCaseEntity>
    <description></description>
-   <name>Demo</name>
-   <tag>GenAI</tag>
+   <name>SelfHealingExample</name>
+   <tag></tag>
    <comment></comment>
    <recordOption>OTHER</recordOption>
-   <testCaseGuid>b0f2a881-2e45-4117-849f-17814bcce00e</testCaseGuid>
+   <testCaseGuid>e6f13485-dd69-481b-a6ac-4cec79d361f7</testCaseGuid>
 </TestCaseEntity>

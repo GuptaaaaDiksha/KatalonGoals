@@ -31,6 +31,7 @@ for (int r = 1; r <= rows; r++) {
 	WebUI.navigateToUrl('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
 
 	// enter username from CSV
+	
 	WebUI.setText(findTestObject('Object Repository/Page_OrangeHRM/input_Username_username'), username)
 
 	// enter password from CSV (must be encrypted string)
@@ -44,4 +45,5 @@ for (int r = 1; r <= rows; r++) {
 
 	// close browser
 	WebUI.closeBrowser()
+	
 }
