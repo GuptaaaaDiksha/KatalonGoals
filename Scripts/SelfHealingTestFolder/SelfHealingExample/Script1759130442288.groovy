@@ -16,7 +16,7 @@ import com.kms.katalon.core.checkpoint.Checkpoint as Checkpoint
 import internal.GlobalVariable as GlobalVariable
 import org.openqa.selenium.Keys as Keys
 
-WebUI.openBrowser('7')
+WebUI.openBrowser('gfvv76')
 
 WebUI.navigateToUrl('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
 
