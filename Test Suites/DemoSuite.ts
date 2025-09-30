@@ -12,10 +12,10 @@
    <rerunImmediately>true</rerunImmediately>
    <testSuiteGuid>fee7728a-bde9-41c8-b5e6-723211bd87cb</testSuiteGuid>
    <testCaseLink>
-      <guid>2b9ff0d2-7d77-4d05-9c79-3cc059932ef5</guid>
+      <guid>b40a8e18-13f3-4ebe-8aa0-e5689d9ec173</guid>
       <isReuseDriver>false</isReuseDriver>
       <isRun>true</isRun>
-      <testCaseId>Test Cases/StudioAssistFolder/StudioAssistExample</testCaseId>
+      <testCaseId>Test Cases/SelfHealingTestFolder/SelfHealingExample</testCaseId>
       <usingDataBindingAtTestSuiteLevel>true</usingDataBindingAtTestSuiteLevel>
    </testCaseLink>
 </TestSuiteEntity>
