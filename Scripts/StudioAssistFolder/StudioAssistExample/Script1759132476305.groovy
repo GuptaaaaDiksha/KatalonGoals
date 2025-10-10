@@ -16,33 +16,37 @@ import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
 import com.kms.katalon.core.windows.keyword.WindowsBuiltinKeywords as Windows
 import internal.GlobalVariable as GlobalVariable
 import org.openqa.selenium.Keys as Keys
+import static com.kms.katalon.core.testobject.ObjectRepository.findTestObject
+import com.kms.katalon.core.webui.keyword.WebUiBuiltInKeywords as WebUI
+// Open browser , Navigate TO URL Which is defined globally , Define a data provider for invalid login credentials , and enter it in fields and click on login button
 
-// Load CSV file from Data Files (make sure it's added as loginData.xlsx)
-def data = findTestData('Data Files/loginData')
+// Open a new browser window
+WebUI.openBrowser('')
 
-// Get total number of rows
-int rows = data.getRowNumbers()
+// Navigate to the URL defined in GlobalVariable
+WebUI.navigateToUrl(GlobalVariable.url)
 
-for (int r = 1; r <= rows; r++) {
-	String username = data.getValue(1, r)   // first column
-	String password = data.getValue(2, r)   // second column
+// Define a list of invalid login credentials as data provider
+def invalidCredentials = [
+    [username: 'invalidUser1', password: 'wrongPass1'],
+    [username: 'invalidUser2', password: 'wrongPass2'],
+]
 
-	WebUI.openBrowser('')
-	WebUI.navigateToUrl('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
-
-	// enter username from CSV
-	
-	WebUI.setText(findTestObject('Object Repository/Page_OrangeHRM/input_Username_username'), username)
-
-	// enter password from CSV (must be encrypted string)
-	WebUI.setEncryptedText(findTestObject('Object Repository/Page_OrangeHRM/input_Password_password'), password)
-
-	// click login
-	WebUI.click(findTestObject('Object Repository/Page_OrangeHRM/button_Password_oxd-button oxd-button--medi_8860b7'))
-
-	// verify dashboard text is present (fixed, not data-driven)
-	WebUI.verifyElementPresent(findTestObject('Object Repository/Page_OrangeHRM/span_PIM_oxd-text oxd-text--span oxd-main-m_a32acf'), 10)
-
-	// close browser
-
+// Iterate over each set of invalid credentials
+for (def creds : invalidCredentials) {
+    // Set the username field with invalid username
+    WebUI.setText(findTestObject('Object Repository/Page_OrangeHRM/input_Username_username'), creds.username)
+    
+    // Set the password field with invalid password
+    WebUI.setText(findTestObject('Object Repository/Page_OrangeHRM/input_Password_password'), creds.password)
+    
+    // Click the login button
+    WebUI.click(findTestObject('Object Repository/Page_OrangeHRM/button_Password_oxd-button oxd-button--medi_8860b7'))
+    
+    // Optional: Add a small delay to observe the result before next iteration
+    WebUI.delay(2)
+    
+    // Clear username and password fields for next iteration
+    WebUI.clearText(findTestObject('Object Repository/Page_OrangeHRM/input_Username_username'))
+    WebUI.clearText(findTestObject('Object Repository/Page_OrangeHRM/input_Password_password'))
 }

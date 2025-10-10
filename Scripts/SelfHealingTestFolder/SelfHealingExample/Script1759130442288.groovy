@@ -20,6 +20,8 @@ WebUI.openBrowser('')
 
 WebUI.navigateToUrl('https://opensource-demo.orangehrmlive.com/web/index.php/auth/login')
 
+WebUI.delay(30)
+
 WebUI.doubleClick(findTestObject('Object Repository/Page_OrangeHRM/p_Login_oxd-text oxd-text--p'))
 
 WebUI.setText(findTestObject('Object Repository/Page_OrangeHRM/input_Username_username'), 'Admin')
